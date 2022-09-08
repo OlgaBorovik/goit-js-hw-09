@@ -1,34 +1,57 @@
+import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
 const refs = {
   form: document.querySelector('.form'),
-  delay:document.querySelector('input[name="delay"]'),
-  step:document.querySelector('input[name="step"]'),
-  amount:document.querySelector('input[name="amount"]'),
   btn: document.querySelector('button'),
 }
 
 
-function createPromise(position, delay) {
-  return new Promise(resolve => {
-    const shouldResolve = Math.random() > 0.3;
-    if (shouldResolve) {
-      // Fulfill
-      resolve({ position, delay })
-    } else {
-      // Reject
-    }
-  })
+function onClickSubmit(evt) {
+  evt.preventDefault()
+  const {
+    elements: { delay, step, amount },
+  } = evt.currentTarget;
 
+  // console.log(delay.value, step.value, amount.value)
+
+  const numDelay = Number(delay.value);
+  const numStep = Number(step.value);
+  const numAmount = Number(amount.value);
+
+  for (i = 0; i < numAmount; i++){
+    
+    createPromise(i + 1, numDelay + i * numStep)
+    .then(({ position, delay }) => {
+          Notiflix.Notify.success(
+            `✅ Fulfilled promise ${position} in ${delay}ms`
+          );
+        })
+        .catch(({ position, delay }) => {
+          Notiflix.Notify.warning(
+            `❌ Rejected promise ${position} in ${delay}ms`
+          );
+        });
+  }
+  evt.currentTarget.reset();
 }
+   
 
 
+function createPromise(position, delay) {
+  const shouldResolve = Math.random() > 0.3;
+  return new Promise((resolve, reject) => {
+  
+  setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
+}
+  
 
-refs.form.addEventListener('submit', createPromise())
+refs.form.addEventListener('submit', onClickSubmit)
 
-
-// createPromise(2, 1500)
-//   .then(({ position, delay }) => {
-//     console.log(`✅ Fulfilled promise ${position} in ${delay}ms`);
-//   })
-//   .catch(({ position, delay }) => {
-//     console.log(`❌ Rejected promise ${position} in ${delay}ms`);
-//   });
