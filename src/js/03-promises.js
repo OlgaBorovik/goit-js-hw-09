@@ -9,16 +9,18 @@ const refs = {
 
 function createPromise(position, delay) {
   return new Promise(resolve => {
-  const shouldResolve = Math.random() > 0.3;
-  if (shouldResolve) {
-    // Fulfill
-    resolve({position, delay})
-  } else {
-    // Reject
-  }
-  }
-  
+    const shouldResolve = Math.random() > 0.3;
+    if (shouldResolve) {
+      // Fulfill
+      resolve({ position, delay })
+    } else {
+      // Reject
+    }
+  })
+
 }
+
+
 
 refs.form.addEventListener('submit', createPromise())
 
