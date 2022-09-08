@@ -19,7 +19,7 @@ function onClickSubmit(evt) {
   const numStep = Number(step.value);
   const numAmount = Number(amount.value);
 
-  for (i = 0; i < numAmount; i++){
+  for (let i = 0; i < numAmount; i++){
     
     createPromise(i + 1, numDelay + i * numStep)
     .then(({ position, delay }) => {
